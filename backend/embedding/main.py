@@ -53,7 +53,7 @@ def get_exec_id() -> str:
 
 @retry(tries=RETRIES_TO_INSERT_TO_POSTGRES, delay=RETRY_DELAY_TO_INSERT_TO_POSTGRES)
 def insert_to_postgres(
-    bot_id: str, contents: ListProxy, sources: ListProxy, embeddings: ListProxy, chunk_size=1000
+    bot_id: str, contents: ListProxy, sources: ListProxy, embeddings: ListProxy, chunk_size=50
 ):
     secrets: Any = parameters.get_secret(DB_SECRETS_ARN)  # type: ignore
     db_info = json.loads(secrets)
