@@ -10,8 +10,9 @@ export type Model =
   | 'mixtral-8x7b-instruct'
   | 'mistral-large';
 export type Content = {
-  contentType: 'text' | 'image';
+  contentType: 'text' | 'image' | 'attachment';
   mediaType?: string;
+  fileName?: string;
   body: string;
 };
 
@@ -22,12 +23,40 @@ export type UsedChunk = {
   rank: number;
 };
 
+export type AgentToolUseContent = {
+  toolUseId: string;
+  name: string;
+  input: { [key: string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+};
+
+export type AgentToolResultContent = {
+  json_: { [key: string]: any }; // eslint-disable-line @typescript-eslint/no-explicit-any
+  text: string;
+};
+
+export type AgentToolResult = {
+  toolUseId: string;
+  content: AgentToolResultContent;
+  status: 'success' | 'error';
+};
+
+export type AgentContent = {
+  contentType: 'toolUse' | 'toolResult' | 'text';
+  body: AgentToolUseContent | AgentToolResult | string;
+};
+
+export type AgentMessage = {
+  role: string;
+  content: AgentContent[];
+};
+
 export type MessageContent = {
   role: Role;
   content: Content[];
   model: Model;
   feedback: null | Feedback;
   usedChunks: null | UsedChunk[];
+  thinkingLog: null | AgentMessage[];
 };
 
 export type RelatedDocument = {
@@ -50,6 +79,7 @@ export type PostMessageRequest = {
     parentMessageId: null | string;
   };
   botId?: string;
+  continueGenerate?: bool;
 };
 
 export type PostMessageResponse = {
@@ -86,6 +116,7 @@ export type MessageMap = {
 
 export type Conversation = ConversationMeta & {
   messageMap: MessageMap;
+  shouldContinue: boolean;
 };
 
 export type PutFeedbackRequest = {

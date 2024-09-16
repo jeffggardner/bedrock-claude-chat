@@ -24,7 +24,7 @@ echo ""
 #
 
 while true; do
-read -p "Are you a new user or already using v1.x of Bedrock Claude Chat? (y/N):  " answer
+read -p "Are you a new user starting with v1.x or later? (y/N): " answer
 case ${answer:0:1} in
 y|Y )
 echo "Starting deployment..."
@@ -44,8 +44,10 @@ done
 ALLOW_SELF_REGISTER="true"
 IPV4_RANGES=""
 IPV6_RANGES=""
+DISABLE_IPV6="false"
 ALLOWED_SIGN_UP_EMAIL_DOMAINS=""
 BEDROCK_REGION="us-east-1"
+VERSION="v1"
 
 # Parse command-line arguments for customization
 while [[ "$#" -gt 0 ]]; do
