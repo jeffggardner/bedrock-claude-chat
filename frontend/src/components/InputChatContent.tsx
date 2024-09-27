@@ -187,15 +187,20 @@ const InputChatContent: React.FC<Props> = (props) => {
       if (!clipboardItems || clipboardItems.length === 0) {
         return;
       }
-
+    
       for (let i = 0; i < clipboardItems.length; i++) {
         if (model?.supportMediaType.includes(clipboardItems[i].type)) {
           const pastedFile = clipboardItems[i].getAsFile();
           
           const contentType = pastedFile?.type.split('/')[0];
           console.log(contentType);
-
-          if (pastedFile && contentType === 'image') {
+    
+          if (pastedFile && (contentType === 'text/plain' || contentType === 'text/html')) {
+            pastedFile.text().then(text => {
+              setContent((prevContent: string) => prevContent + text);
+            });
+            e.preventDefault();
+          } else if (pastedFile && contentType === 'image') {
             encodeAndPushImage(pastedFile);
             e.preventDefault();
           }
