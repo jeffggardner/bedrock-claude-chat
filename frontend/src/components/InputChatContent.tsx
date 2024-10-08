@@ -187,26 +187,30 @@ const InputChatContent: React.FC<Props> = (props) => {
       if (!clipboardItems || clipboardItems.length === 0) {
         return;
       }
-    
-      const textItem = Array.from(clipboardItems).find(item => {
-        const contentType = item.type.split('/')[0];
-        return contentType === 'text/plain' || contentType === 'text/html';
-      });
-    
-      if (textItem) {
-        const pastedFile = textItem.getAsFile();
-        if (pastedFile) {
-          pastedFile.text().then(text => {
+
+      let hasTextItem = false;
+
+      for (let i = 0; i < clipboardItems.length; i++) {
+        const item = clipboardItems[i];
+        const contentType = item.type;
+
+        if (contentType === 'text/plain') {
+          hasTextItem = true;
+          item.getAsString(text => {
             setContent((prevContent: string) => prevContent + text);
           });
           e.preventDefault();
         }
-      } else {
+      }
+
+      if (!hasTextItem) {
         for (let i = 0; i < clipboardItems.length; i++) {
-          if (model?.supportMediaType.includes(clipboardItems[i].type)) {
-            const pastedFile = clipboardItems[i].getAsFile();
-            const contentType = pastedFile?.type.split('/')[0];
-            if (pastedFile && contentType === 'image') {
+          const item = clipboardItems[i];
+          const contentType = item.type.split('/')[0];
+
+          if (contentType === 'image') {
+            const pastedFile = item.getAsFile();
+            if (pastedFile) {
               encodeAndPushImage(pastedFile);
               e.preventDefault();
             }
@@ -214,7 +218,9 @@ const InputChatContent: React.FC<Props> = (props) => {
         }
       }
     };
-    currentElem?.addEventListener('paste', pasteListener);
+
+    const textareaElem = Textarea.current;
+    textareaElem?.addEventListener('paste', pasteListener);
 
     return () => {
       currentElem?.removeEventListener('keypress', keypressListener);
