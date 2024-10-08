@@ -33,5 +33,6 @@ jobs:
           echo "GITHUB_REF: ${GITHUB_REF}"
           echo "BRANCH: ${BRANCH}"
           echo "Environment: ${Environment}"
-
+          
+          export Environment
           ./bin.sh --bedrock-region us-east-1 --allowed-signup-email-domains "republicservices.com,repsrv.com" --ipv4-ranges "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16" --version "1.2.6"
