@@ -243,7 +243,7 @@ def main(
             logger.info(f"Number of chunks: {len(contents)}")
 
             # Insert records into postgres
-            insert_to_postgres(bot_id, contents, sources, embeddings)
+            insert_to_postgres(bot_id, contents, sources, embeddings, chunk_size)
             status_reason = "Successfully inserted to vector store."
     except Exception as e:
         logger.error("[ERROR] Failed to embed.")
