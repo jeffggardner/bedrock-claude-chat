@@ -41,13 +41,13 @@ esac
 done
 
 # Default parameters
-ALLOW_SELF_REGISTER="true"
-IPV4_RANGES=""
+ALLOW_SELF_REGISTER="false"
+IPV4_RANGES="10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 IPV6_RANGES=""
 DISABLE_IPV6="false"
-ALLOWED_SIGN_UP_EMAIL_DOMAINS=""
+ALLOWED_SIGN_UP_EMAIL_DOMAINS="republicservices.com,repsrv.com"
 BEDROCK_REGION="us-east-1"
-VERSION="v1"
+VERSION="v1-upgrade"
 
 # Parse command-line arguments for customization
 while [[ "$#" -gt 0 ]]; do
