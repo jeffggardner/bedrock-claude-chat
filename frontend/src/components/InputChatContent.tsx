@@ -220,7 +220,7 @@ const InputChatContent: React.FC<Props> = (props) => {
       }
     };
 
-    const textareaElem = Textarea.defaultProps?.current as HTMLTextAreaElement;
+    const textareaElem = Textarea.prototype;
     textareaElem?.addEventListener('paste', pasteListener);
 
     return () => {
