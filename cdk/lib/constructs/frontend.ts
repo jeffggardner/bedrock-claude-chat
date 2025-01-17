@@ -130,8 +130,9 @@ export class Frontend extends Construct {
       if (!idp.isExist()) return defaultProps;
 
       const oAuthProps = {
-        VITE_APP_REDIRECT_SIGNIN_URL: this.getOrigin(),
-        VITE_APP_REDIRECT_SIGNOUT_URL: this.getOrigin(),
+        //republic: override the redirect urls in code build project env
+        // VITE_APP_REDIRECT_SIGNIN_URL: this.getOrigin(),
+        // VITE_APP_REDIRECT_SIGNOUT_URL: this.getOrigin(),
         VITE_APP_COGNITO_DOMAIN: cognitoDomain,
         VITE_APP_SOCIAL_PROVIDERS: idp.getSocialProviders(),
         VITE_APP_CUSTOM_PROVIDER_ENABLED: idp

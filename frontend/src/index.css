@@ -4,7 +4,5 @@
 
 /* tailwindの設定で上書きされてしまうので、importantを設定する */
 .amplify-button--primary {
-  background-color: var(
-    --amplify-components-button-primary-background-color
-  ) !important;
+  background-color: #003763 !important;
 }

@@ -370,7 +370,7 @@ const ChatPage: React.FC = () => {
   });
 
   return (
-    <div
+    <div>
       className="relative flex h-full flex-1 flex-col"
       onDragOver={onDragOver}
       onDrop={endDnd}

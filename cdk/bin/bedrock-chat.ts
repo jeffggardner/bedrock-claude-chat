@@ -59,7 +59,7 @@ const NATGATEWAY_COUNT: number = app.node.tryGetContext("natgatewayCount");
 // https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-wafv2-webacl.html
 const waf = new FrontendWafStack(app, `FrontendWafStack`, {
   env: {
-    // account: process.env.CDK_DEFAULT_ACCOUNT,
+    account: process.env.CDK_DEFAULT_ACCOUNT,
     region: "us-east-1",
   },
   allowedIpV4AddressRanges: ALLOWED_IP_V4_ADDRESS_RANGES,
@@ -84,7 +84,7 @@ const bedrockRegionResources = new BedrockRegionResourcesStack(
 
 const chat = new BedrockChatStack(app, `BedrockChatStack`, {
   env: {
-    // account: process.env.CDK_DEFAULT_ACCOUNT,
+    account: process.env.CDK_DEFAULT_ACCOUNT,
     region: process.env.CDK_DEFAULT_REGION,
   },
   crossRegionReferences: true,

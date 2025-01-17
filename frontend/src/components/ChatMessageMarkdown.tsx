@@ -13,8 +13,8 @@ import { create } from 'zustand';
 import { produce } from 'immer';
 import rehypeExternalLinks, { Options } from 'rehype-external-links';
 import rehypeKatex from 'rehype-katex';
-import remarkMath from 'remark-math';
-import 'katex/dist/katex.min.css';
+// import remarkMath from 'remark-math';
+import "katex/dist/katex.min.css"
 import { onlyText } from 'react-children-utilities';
 
 type Props = BaseProps & {
@@ -124,8 +124,8 @@ const ChatMessageMarkdown: React.FC<Props> = ({
   }, [children]);
 
   const remarkPlugins = useMemo(() => {
-    return [remarkGfm, remarkBreaks, remarkMath];
-  }, []);
+    return [remarkGfm, remarkBreaks, ] //  remarkMath] don't use math mark up
+  }, [])
   const rehypePlugins = useMemo(() => {
     const rehypeExternalLinksOptions: Options = {
       target: '_blank',

@@ -15,6 +15,12 @@ type Props = BaseProps & {
 
 const ListItemBot: React.FC<Props> = (props) => {
   const { t } = useTranslation();
+
+  // force bot to be available
+  if (!props.bot.available) {
+    props.bot.available = true;
+  }
+  
   return (
     <div
       key={props.bot.id}

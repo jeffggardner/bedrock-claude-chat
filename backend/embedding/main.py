@@ -53,7 +53,7 @@ def get_exec_id() -> str:
 
 @retry(tries=RETRIES_TO_INSERT_TO_POSTGRES, delay=RETRY_DELAY_TO_INSERT_TO_POSTGRES)
 def insert_to_postgres(
-    bot_id: str, contents: ListProxy, sources: ListProxy, embeddings: ListProxy
+    bot_id: str, contents: ListProxy, sources: ListProxy, embeddings: ListProxy, chunk_size=50
 ):
     secrets: Any = parameters.get_secret(DB_SECRETS_ARN)  # type: ignore
     db_info = json.loads(secrets)
@@ -72,18 +72,37 @@ def insert_to_postgres(
             cursor.execute(delete_query, (bot_id,))
 
             insert_query = f"INSERT INTO items (id, botid, content, source, embedding) VALUES (%s, %s, %s, %s, %s)"
-            values_to_insert = []
-            for i, (source, content, embedding) in enumerate(
-                zip(sources, contents, embeddings)
-            ):
-                id_ = str(ULID())
-                logger.info(f"Preview of content {i}: {content[:200]}")
-                values_to_insert.append(
-                    (id_, bot_id, content, source, json.dumps(embedding))
-                )
-            cursor.executemany(insert_query, values_to_insert)
-        conn.commit()
-        logger.info(f"Successfully inserted {len(values_to_insert)} records.")
+            
+            for i in range(0, len(contents), chunk_size):
+                values_to_insert = []
+                for j, (source, content, embedding) in enumerate(
+                    zip(sources[i:i+chunk_size], contents[i:i+chunk_size], embeddings[i:i+chunk_size])
+                ):
+                    id_ = str(ULID())
+                    logger.info(f"Preview of content {i+j}: {content[:200]}")
+
+                    logger.info(f"Type of embedding: {type(embedding)} ")
+                    logger.info(f"Type of source: {type(source)} ")
+                    logger.info(f"Type of content: {type(content)} ")
+
+                    if isinstance(source, str) and '\0' in source:
+                        logger.info("Source contains null byte: ")
+                        source = source.replace('\0', '')
+                    
+                    if isinstance(content, str) and '\0' in content:
+                        logger.info("Content contains null byte: ")
+                        content = content.replace('\0', '')
+                    
+                    if isinstance(embedding, str) and '\0' in embedding:
+                        logger.info("Embedding contains null byte: ")
+                        embedding = embedding.replace('\0', '')
+
+                    values_to_insert.append(
+                        (id_, bot_id, content, source, json.dumps(embedding))
+                    )
+                cursor.executemany(insert_query, values_to_insert)
+                conn.commit()
+                logger.info(f"Successfully inserted {len(values_to_insert)} records.")
     except Exception as e:
         conn.rollback()
         raise e

@@ -56,12 +56,24 @@ export class BedrockChatStack extends cdk.Stack {
     });
     const cronSchedule = createCronSchedule(props.rdsSchedules);
 
+<<<<<<< HEAD
     const vpc = new ec2.Vpc(this, "VPC", {
       natGateways: props.natgatewayCount,
     });
     vpc.publicSubnets.forEach((subnet) => {
       (subnet.node.defaultChild as ec2.CfnSubnet).mapPublicIpOnLaunch = false;
+=======
+    // const vpc = new ec2.Vpc(this, "VPC", {});
+    const vpc = ec2.Vpc.fromLookup(this, "VPC", {
+      vpcName: 'ai-platfrom-vpc-qa',
+      ownerAccountId: process.env.CDK_DEFAULT_ACCOUNT,
+      region: process.env.CDK_DEFAULT_REGION,
+>>>>>>> v1
     });
+
+    // vpc.publicSubnets.forEach((subnet) => {
+    //   (subnet.node.defaultChild as ec2.CfnSubnet).mapPublicIpOnLaunch = false;
+    // });
 
     const vectorStore = new VectorStore(this, "VectorStore", {
       vpc: vpc,

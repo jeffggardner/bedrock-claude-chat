@@ -18,7 +18,7 @@ from typing_extensions import NotRequired, TypedDict, no_type_check
 logger = logging.getLogger(__name__)
 
 BEDROCK_REGION = os.environ.get("BEDROCK_REGION", "us-east-1")
-ENABLE_MISTRAL = os.environ.get("ENABLE_MISTRAL", "") == "true"
+ENABLE_MISTRAL = os.environ.get("ENABLE_MISTRAL", "") == "false"
 DEFAULT_GENERATION_CONFIG = (
     DEFAULT_MISTRAL_GENERATION_CONFIG
     if ENABLE_MISTRAL

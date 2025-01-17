@@ -9,7 +9,7 @@ export type TIdentityProvider = {
    */
   service: string;
   /**
-   * Service name for OIDC. Required when service is "oidc"
+   * Service name for OIDC. Required when service is "oidc" or "saml"
    */
   serviceName?: string;
   /**
@@ -68,6 +68,11 @@ export const identityProvider = (identityProviders: TIdentityProvider[]) => {
           return aws_cognito.UserPoolClientIdentityProvider.custom(
             provider.serviceName! // already validated
           );
+        //republic: saml provider  
+        case "saml":
+          return aws_cognito.UserPoolClientIdentityProvider.custom(
+            provider.serviceName! // already validated
+        );
         default:
           throw new Error(`Invalid identity provider: ${provider.service}`);
       }
@@ -76,16 +81,20 @@ export const identityProvider = (identityProviders: TIdentityProvider[]) => {
 
   const getSocialProviders = () =>
     getProviders()
-      .filter(({ service }) => service !== "oidc")
+      .filter(({ service }) => (service !== "oidc" && service !== "saml"))
       .map(({ service }) => service)
       .join(",");
 
   const checkCustomProviderEnabled = () =>
     // Currently only support OIDC provider (SAML not supported)
-    getProviders().some(({ service }) => service === "oidc");
+    //getProviders().some(({ service }) => service === "oidc");
+    //republic: add check for saml
+    getProviders().some(({ service }) => service === "oidc" || service === "saml");
 
   const getCustomProviderName = () =>
     // Currently only support OIDC provider (SAML not supported)
+    // republic: return the serviceName of the first OIDC or SAML  provider
+    getProviders().find(({ service }) => service === "saml")?.serviceName ||
     getProviders().find(({ service }) => service === "oidc")?.serviceName;
 
   return {
@@ -107,14 +116,15 @@ const validateSocialProvider = (
   | Effect.Effect<never, InvalidSocialProvider, never>
   | Effect.Effect<TIdentityProvider, never, never> => {
   if (
-    !["google", "facebook", "amazon", "apple", "oidc"].includes(
+    !["google", "facebook", "amazon", "apple", "oidc","saml"].includes(
       provider.service
     )
   ) {
     return Effect.fail({ type: "InvalidSocialProvider" });
   }
 
-  if (provider.service === "oidc" && !provider.serviceName) {
+   //republic: for saml
+  if ((provider.service == "oidc" || provider.service == "saml") && !provider.serviceName) {
     return Effect.fail({ type: "InvalidSocialProvider" });
   }
 

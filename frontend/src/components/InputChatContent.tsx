@@ -350,17 +350,39 @@ const InputChatContent = forwardRef<HTMLElement, Props>((props, focusInputRef) =
         return;
       }
 
+      let hasTextItem = false;
+
       for (let i = 0; i < clipboardItems.length; i++) {
-        if (model?.supportMediaType.includes(clipboardItems[i].type)) {
-          const pastedFile = clipboardItems[i].getAsFile();
-          if (pastedFile) {
-            encodeAndPushImage(pastedFile);
-            e.preventDefault();
+        const item = clipboardItems[i];
+        const contentType = item.type;
+
+        if (contentType === 'text/plain') {
+          hasTextItem = true;
+          item.getAsString(text => {
+            setContent((prevContent: string) => prevContent + text);
+          });
+          e.preventDefault();
+        }
+      }
+
+      if (!hasTextItem) {
+        for (let i = 0; i < clipboardItems.length; i++) {
+          const item = clipboardItems[i];
+          const contentType = item.type.split('/')[0];
+
+          if (contentType === 'image') {
+            const pastedFile = item.getAsFile();
+            if (pastedFile) {
+              encodeAndPushImage(pastedFile);
+              e.preventDefault();
+            }
           }
         }
       }
     };
-    currentElem?.addEventListener('paste', pasteListener);
+
+    const textareaElem = Textarea.current;
+    textareaElem?.addEventListener('paste', pasteListener);
 
     return () => {
       currentElem?.removeEventListener('keypress', keypressListener);

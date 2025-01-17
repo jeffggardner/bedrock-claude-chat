@@ -7,6 +7,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
+    "sample": "test",
     "test": "jest",
     "cdk": "cdk",
     "postinstall": "npm install --prefix custom-resources/setup-pgvector"
