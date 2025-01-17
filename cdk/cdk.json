@@ -63,7 +63,7 @@
         "serviceName": "azure-ad-sso"
       }
     ],
-    "userPoolDomainPrefix": "chat-rsg-qa",
+    "userPoolDomainPrefix": "chat-rsg-dev",
     "allowedSignUpEmailDomains": [],
     "autoJoinUserGroups": ["CreatingBotAllowed"],
     "selfSignUpEnabled": true,
