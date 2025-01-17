@@ -11,6 +11,7 @@ type Props = BaseProps & {
   noBorder?: boolean;
   rows?: number;
   onChange?: (value: string) => void;
+  current?: unknown;
 };
 
 const MAX_HEIGHT = 300;
@@ -22,6 +23,8 @@ const Textarea: React.FC<Props> = (props) => {
   useEffect(() => {
     if (!ref.current) {
       return;
+    } else {
+      props.current = ref.current;
     }
 
     ref.current.style.height = 'auto';

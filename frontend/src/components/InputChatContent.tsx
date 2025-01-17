@@ -76,7 +76,8 @@ const useInputChatContentState = create<{
 const InputChatContent: React.FC<Props> = (props) => {
   const { t } = useTranslation();
   const { postingMessage, hasError, messages } = useChat();
-  const { disabledImageUpload, model, acceptMediaType } = useModel();
+  // const { disabledImageUpload, model, acceptMediaType } = useModel();
+  const { disabledImageUpload, acceptMediaType } = useModel();
 
   const [content, setContent] = useState('');
   const {
@@ -219,7 +220,7 @@ const InputChatContent: React.FC<Props> = (props) => {
       }
     };
 
-    const textareaElem = Textarea.current;
+    const textareaElem = Textarea.defaultProps?.current as HTMLTextAreaElement;
     textareaElem?.addEventListener('paste', pasteListener);
 
     return () => {
